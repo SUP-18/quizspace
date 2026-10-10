@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuizSpace | Learn Smarter. Quiz Better.</title>
+  <meta name="description" content="Professional Programming Quiz & Exam Platform" />
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body class="light-mode">
+
+  <!-- =====================================================
+       PUBLIC PAGES (Landing, Login, Signup)
+  ====================================================== -->
+  <div id="public-layout" class="layout-container active">
+
+    <!-- Navbar -->
+    <header class="public-nav">
+      <div class="logo">QuizSpace</div>
+      <nav class="public-links">
+        <a href="#" onclick="app.navigate('landing-screen')">Home</a>
+        <a href="#features">Features</a>
+      </nav>
+      <div class="auth-buttons">
+        <button class="btn btn-secondary" onclick="app.navigate('login-screen')">Log In</button>
+        <button class="btn btn-primary" onclick="app.navigate('signup-screen')">Sign Up Free</button>
+      </div>
+    </header>
+
+    <!-- 1. LANDING SCREEN -->
+    <main id="landing-screen" class="public-screen active">
+      <section class="hero-section">
+        <div class="hero-badge">🚀 Programming · Exams · Analytics</div>
+        <h1>Learn Smarter.<br>Quiz Better.</h1>
+        <p class="hero-subtitle">Practice programming across 7 categories, take timed exams, track your progress, and grow one question at a time.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary btn-large" onclick="app.navigate('signup-screen')">Start Learning Free</button>
+          <button class="btn btn-secondary btn-large" onclick="app.navigate('login-screen')">Log In</button>
+        </div>
+      </section>
+
+      <section id="features" class="features-section">
+        <h2>Why QuizSpace?</h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <h3>Exam Mode</h3>
+            <p>Timed professional exams with question palette, review, and scoring.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3>Analytics Dashboard</h3>
+            <p>Track performance across categories, difficulties, and time with real charts.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🏆</div>
+            <h3>7 Categories</h3>
+            <p>C, Python, Java, HTML, CSS, JavaScript, and General Programming.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🔥</div>
+            <h3>Streak Tracking</h3>
+            <p>Build daily habits with streak tracking and personalized insights.</p>
+          </div>
+        </div>
+      </section>
+
+      <footer class="public-footer">
+        <p>&copy; 2026 QuizSpace. All rights reserved.</p>
+        <div class="footer-links">
+          <a href="#">About</a><a href="#">Help</a><a href="#">Privacy</a><a href="#">Terms</a>
+        </div>
+      </footer>
+    </main>
+
+    <!-- 2. LOGIN SCREEN -->
+    <main id="login-screen" class="public-screen auth-container">
+      <div class="auth-card">
+        <div class="auth-logo">QuizSpace</div>
+        <h2>Welcome back!</h2>
+        <p class="auth-subtitle">Continue your learning journey.</p>
+        <form id="login-form" class="auth-form" onsubmit="event.preventDefault(); authHandlers.handleLogin();">
+          <div class="form-group">
+            <label for="login-email">Email Address</label>
+            <input type="email" id="login-email" class="input-field" placeholder="you@example.com" required />
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <div class="password-wrapper">
+              <input type="password" id="login-password" class="input-field" placeholder="••••••••" required />
+              <button type="button" class="toggle-password" onclick="authHandlers.togglePassword('login-password')">👁️</button>
+            </div>
+          </div>
+          <div class="form-options">
+            <label><input type="checkbox" id="remember-me" /> Remember me</label>
+            <a href="#" class="forgot-link" onclick="app.navigate('forgot-password-screen')">Forgot Password?</a>
+          </div>
+          <div id="login-error" class="form-error"></div>
+          <button type="submit" id="login-btn" class="btn btn-primary btn-full">Log In</button>
+        </form>
+        <p class="auth-footer">Don't have an account? <a href="#" onclick="app.navigate('signup-screen')">Sign up free</a></p>
+        <button class="btn btn-text" onclick="app.navigate('landing-screen')">← Back to Home</button>
+      </div>
+    </main>
+
+    <!-- 3. SIGNUP SCREEN -->
+    <main id="signup-screen" class="public-screen auth-container">
+      <div class="auth-card">
+        <div class="auth-logo">QuizSpace</div>
+        <h2>Create an Account</h2>
+        <p class="auth-subtitle">Join QuizSpace and start learning today.</p>
+        <form id="signup-form" class="auth-form" onsubmit="event.preventDefault(); authHandlers.handleSignup();">
+          <div class="form-group">
+            <label for="signup-name">Full Name</label>
+            <input type="text" id="signup-name" class="input-field" placeholder="Your Name" required />
+          </div>
+          <div class="form-group">
+            <label for="signup-username">Username</label>
+            <input type="text" id="signup-username" class="input-field" placeholder="coolcoder" required minlength="3" />
+          </div>
+          <div class="form-group">
+            <label for="signup-email">Email Address</label>
+            <input type="email" id="signup-email" class="input-field" placeholder="you@example.com" required />
+          </div>
+          <div class="form-group">
+            <label for="signup-password">Password</label>
+            <div class="password-wrapper">
+              <input type="password" id="signup-password" class="input-field" placeholder="Min. 8 characters" required minlength="8" />
+              <button type="button" class="toggle-password" onclick="authHandlers.togglePassword('signup-password')">👁️</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="signup-confirm">Confirm Password</label>
+            <input type="password" id="signup-confirm" class="input-field" placeholder="Repeat password" required />
+          </div>
+          <div class="form-options">
+            <label><input type="checkbox" required /> I accept the Terms and Privacy Policy</label>
+          </div>
+          <div id="signup-error" class="form-error"></div>
+          <button type="submit" id="signup-btn" class="btn btn-primary btn-full">Create Account</button>
+        </form>
+        <p class="auth-footer">Already have an account? <a href="#" onclick="app.navigate('login-screen')">Log in</a></p>
+      </div>
+    </main>
+
+    <!-- 4. FORGOT PASSWORD SCREEN -->
+    <main id="forgot-password-screen" class="public-screen auth-container">
+      <div class="auth-card">
+        <h2>Reset Password</h2>
+        <p class="auth-subtitle">Enter your email and we'll send a reset link.</p>
+        <form id="reset-form" class="auth-form" onsubmit="event.preventDefault(); authHandlers.handleReset();">
+          <div class="form-group">
+            <label for="reset-email">Email Address</label>
+            <input type="email" id="reset-email" class="input-field" required />
+          </div>
+          <div id="reset-message" class="form-message"></div>
+          <button type="submit" class="btn btn-primary btn-full">Send Reset Link</button>
+        </form>
+        <p class="auth-footer"><a href="#" onclick="app.navigate('login-screen')">← Back to Login</a></p>
+      </div>
+    </main>
+
+  </div><!-- /public-layout -->
+
+
+  <!-- =====================================================
+       PROTECTED APP
+  ====================================================== -->
+  <div id="protected-layout" class="layout-container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h2 class="sidebar-logo">QuizSpace</h2>
+        <button class="sidebar-close-btn" id="sidebar-close-btn" title="Close sidebar">✕</button>
+      </div>
+      <ul class="nav-list">
+        <li class="nav-item active" data-target="dashboard-screen">🏠 Dashboard</li>
+        <li class="nav-item" data-target="exam-setup-screen">🎯 Start Exam</li>
+        <li class="nav-item" data-target="setup-screen">⚡ Quick Quiz</li>
+        <li class="nav-item" data-target="analytics-screen">📊 Analytics</li>
+        <li class="nav-item" data-target="exam-history-screen">📋 Exam History</li>
+        <li class="nav-item" data-target="achievements-screen">🏆 Achievements</li>
+        <li class="nav-item" data-target="settings-screen">⚙️ Settings</li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-full" onclick="authHandlers.handleLogout()">🚪 Log Out</button>
+      </div>
+    </aside>
+
+    <!-- SIDEBAR OVERLAY (mobile) -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+      <!-- Top Nav -->
+      <header class="top-nav">
+        <button class="menu-toggle" id="menu-toggle" title="Toggle sidebar">☰</button>
+        <div class="user-info">
+          <span id="nav-greeting">Hello!</span>
+          <button id="theme-toggle" class="btn-theme" title="Toggle Theme">🌙</button>
+        </div>
+      </header>
+
+      <!-- ── DASHBOARD ──────────────────────────────────── -->
+      <div id="dashboard-screen" class="protected-screen active">
+        <div class="welcome-banner">
+          <div class="welcome-text">
+            <h1 id="dashboard-welcome">Welcome back!</h1>
+            <p>Ready to sharpen your programming skills today?</p>
+          </div>
+          <div class="welcome-actions">
+            <button class="btn btn-primary" onclick="app.navigateProtected('exam-setup-screen')">🎯 Start Exam</button>
+            <button class="btn btn-secondary" onclick="app.navigateProtected('setup-screen')">⚡ Quick Quiz</button>
+          </div>
+        </div>
+
+        <!-- Streak banner -->
+        <div class="streak-banner" id="streak-banner" style="display:none">
+          <span class="streak-icon">🔥</span>
+          <span id="streak-text">3-day streak! Keep it up!</span>
+        </div>
+
+        <h2 class="section-title">Overview</h2>
+        <div class="stats-grid four-col">
+          <div class="stat-card"><span class="stat-icon">📝</span><span class="stat-label">Exams Taken</span><span class="stat-value" id="stat-total-quizzes">0</span></div>
+          <div class="stat-card"><span class="stat-icon">📈</span><span class="stat-label">Avg Score</span><span class="stat-value" id="stat-avg-score">—</span></div>
+          <div class="stat-card"><span class="stat-icon">🔥</span><span class="stat-label">Streak</span><span class="stat-value" id="stat-streak">0</span></div>
+          <div class="stat-card"><span class="stat-icon">🎯</span><span class="stat-label">Best Score</span><span class="stat-value" id="stat-best-score">—</span></div>
+        </div>
+
+        <h2 class="section-title">Recent Activity</h2>
+        <div id="dashboard-recent" class="recent-activity">
+          <div class="empty-state small"><p>No exams yet. <a href="#" onclick="app.navigateProtected('exam-setup-screen')">Start one!</a></p></div>
+        </div>
+
+        <h2 class="section-title">Quick Actions</h2>
+        <div class="quick-actions-grid">
+          <button class="quick-action-card" onclick="app.navigateProtected('exam-setup-screen')">
+            <span class="qa-icon">🎯</span><span>New Exam</span>
+          </button>
+          <button class="quick-action-card" onclick="app.navigateProtected('analytics-screen')">
+            <span class="qa-icon">📊</span><span>Analytics</span>
+          </button>
+          <button class="quick-action-card" onclick="app.navigateProtected('exam-history-screen')">
+            <span class="qa-icon">📋</span><span>History</span>
+          </button>
+          <button class="quick-action-card" onclick="app.navigateProtected('achievements-screen')">
+            <span class="qa-icon">🏆</span><span>Achievements</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ── EXAM SETUP ──────────────────────────────────── -->
+      <div id="exam-setup-screen" class="protected-screen">
+        <div class="page-header">
+          <h2>🎯 Configure Your Exam</h2>
+          <p>Customise your exam and put your knowledge to the test.</p>
+        </div>
+
+        <div class="setup-grid">
+          <!-- Config Form -->
+          <div class="setup-form-card">
+            <div class="form-group">
+              <label for="exam-setup-category">📚 Category</label>
+              <select id="exam-setup-category" class="input-field" onchange="ExamEngine.updateDurationPreview()">
+                <option value="All">All Categories</option>
+                <option value="C">C Language</option>
+                <option value="Python">Python</option>
+                <option value="Java">Java</option>
+                <option value="HTML">HTML</option>
+                <option value="CSS">CSS</option>
+                <option value="JavaScript">JavaScript</option>
+                <option value="General">General Programming</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="exam-setup-difficulty">⚡ Difficulty</label>
+              <select id="exam-setup-difficulty" class="input-field" onchange="ExamEngine.updateDurationPreview()">
+                <option value="All">All Difficulties</option>
+                <option value="Easy">Easy</option>
+                <option value="Medium" selected>Medium</option>
+                <option value="Hard">Hard</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="exam-setup-numq">🔢 Number of Questions</label>
+              <select id="exam-setup-numq" class="input-field" onchange="ExamEngine.updateDurationPreview()">
+                <option value="5">5 questions</option>
+                <option value="10" selected>10 questions</option>
+                <option value="15">15 questions</option>
+                <option value="20">20 questions</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="toggle-label">
+                <input type="checkbox" id="exam-negative-marking" />
+                <span class="toggle-switch"></span>
+                Enable Negative Marking
+              </label>
+              <small class="field-hint">Deducts marks for wrong answers.</small>
+            </div>
+          </div>
+
+          <!-- Preview Card -->
+          <div class="setup-preview-card">
+            <h3>Exam Summary</h3>
+            <div class="preview-row"><span>⏱️ Duration</span><strong id="exam-duration-preview">—</strong></div>
+            <div class="preview-row"><span>🏅 Max Marks</span><strong id="exam-marks-preview">—</strong></div>
+            <div class="preview-row"><span>📦 Available</span><strong id="exam-available-count" class="avail-ok">—</strong></div>
+            <div class="setup-rules">
+              <h4>Rules</h4>
+              <ul>
+                <li>Answer all questions for best results</li>
+                <li>You can navigate between questions freely</li>
+                <li>Mark questions for review using the 🔖 button</li>
+                <li>Timer cannot be paused once started</li>
+                <li>Answers auto-save when you navigate</li>
+              </ul>
+            </div>
+            <button class="btn btn-primary btn-full" id="exam-start-btn" onclick="handleStartExam()">
+              🚀 Start Exam
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── EXAM SCREEN ─────────────────────────────────── -->
+      <div id="exam-screen" class="protected-screen exam-layout">
+
+        <!-- Warning Banner -->
+        <div class="exam-warning-banner" id="exam-warning-banner"></div>
+
+        <!-- Celebration -->
+        <div class="celebration-container" id="celebration-container"></div>
+
+        <!-- Exam Header -->
+        <div class="exam-header">
+          <div class="exam-title-group">
+            <h3 id="exam-title">Exam</h3>
+            <span id="exam-q-num" class="exam-q-counter">Question 1 of 10</span>
+          </div>
+          <div class="exam-timer-box" id="exam-timer-box">
+            <span>⏱️</span>
+            <span id="exam-timer-display">00:00</span>
+          </div>
+        </div>
+
+        <!-- Progress -->
+        <div class="progress-container">
+          <div class="progress-bar" id="exam-progress-bar"></div>
+        </div>
+        <span class="progress-label" id="exam-progress-label">0/10 answered</span>
+
+        <div class="exam-body">
+          <!-- Question Area -->
+          <div class="exam-question-area">
+            <div class="exam-question-card">
+              <div class="exam-q-meta">
+                <span id="exam-q-badge" class="exam-badge">Category · Difficulty</span>
+                <span id="exam-total-qs" style="display:none"></span>
+              </div>
+              <h2 class="exam-question-text" id="exam-question-text">Loading...</h2>
+              <div class="exam-options-grid" id="exam-options-grid"></div>
+            </div>
+
+            <!-- Exam Controls -->
+            <div class="exam-controls">
+              <button class="btn btn-secondary" id="exam-prev-btn" onclick="ExamEngine.prevQuestion()">← Previous</button>
+              <div class="exam-action-btns">
+                <button class="btn-hint" id="exam-mark-review-btn" onclick="ExamEngine.toggleMarkForReview()">🔖 Mark for Review</button>
+                <button class="btn btn-outline" onclick="ExamEngine.clearAnswer()">🗑️ Clear</button>
+                <button class="btn btn-danger-soft" onclick="ExamEngine.attemptSubmit()">🏁 Submit Exam</button>
+              </div>
+              <button class="btn btn-primary" id="exam-next-btn" onclick="ExamEngine.nextQuestion()">Next →</button>
+            </div>
+          </div>
+
+          <!-- Question Palette Sidebar -->
+          <div class="exam-palette-sidebar">
+            <h4>Question Palette</h4>
+            <div class="palette-legend">
+              <span class="pal-item answered">✓ Answered</span>
+              <span class="pal-item visited">Visited</span>
+              <span class="pal-item marked">🟣 Marked</span>
+              <span class="pal-item">Not visited</span>
+            </div>
+            <div class="exam-palette" id="exam-palette"></div>
+            <div class="palette-counts">
+              <div class="pc-row"><span class="pc-dot answered"></span> Answered <strong id="count-answered">0</strong></div>
+              <div class="pc-row"><span class="pc-dot not-answered"></span> Not Answered <strong id="count-not-answered">0</strong></div>
+              <div class="pc-row"><span class="pc-dot marked"></span> Marked <strong id="count-marked">0</strong></div>
+              <div class="pc-row"><span class="pc-dot not-visited"></span> Not Visited <strong id="count-not-visited">0</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Confirmation Modal -->
+      <div class="modal-overlay" id="submit-confirm-modal">
+        <div class="modal-card">
+          <h3>Submit Exam?</h3>
+          <p>You have <strong id="submit-unanswered-count">0</strong> unanswered questions.</p>
+          <p>Once submitted, you cannot change your answers.</p>
+          <div class="modal-actions">
+            <button class="btn btn-secondary" onclick="ExamEngine.cancelSubmit()">Go Back</button>
+            <button class="btn btn-primary" onclick="ExamEngine.confirmSubmit()">✅ Confirm Submit</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── EXAM RESULTS ────────────────────────────────── -->
+      <div id="exam-results-screen" class="protected-screen">
+        <div class="celebration-container" id="celebration-container-results"></div>
+        <div class="results-page">
+          <div class="results-header">
+            <h2 id="res-title">Exam Complete!</h2>
+            <p class="res-date" id="res-date"></p>
+          </div>
+
+          <div class="results-top">
+            <!-- Score Circle -->
+            <div class="res-score-block">
+              <div class="score-circle" id="res-score-circle">
+                <span class="score-percent" id="res-score-pct">0%</span>
+                <span class="score-points" id="res-score-fraction">0/0</span>
+              </div>
+              <div class="perf-label" id="res-performance-label">—</div>
+            </div>
+
+            <!-- Stats -->
+            <div class="res-stats-grid">
+              <div class="stat-card stat-correct"><span class="stat-icon">✅</span><span class="stat-label">Correct</span><span class="stat-value" id="res-correct">0</span></div>
+              <div class="stat-card stat-incorrect"><span class="stat-icon">❌</span><span class="stat-label">Incorrect</span><span class="stat-value" id="res-incorrect">0</span></div>
+              <div class="stat-card stat-hint"><span class="stat-icon">⬜</span><span class="stat-label">Unanswered</span><span class="stat-value" id="res-unanswered">0</span></div>
+              <div class="stat-card"><span class="stat-icon">🎯</span><span class="stat-label">Accuracy</span><span class="stat-value" id="res-accuracy">—</span></div>
+              <div class="stat-card"><span class="stat-icon">⏱️</span><span class="stat-label">Time Taken</span><span class="stat-value" id="res-time">—</span></div>
+              <div class="stat-card"><span class="stat-icon">🏅</span><span class="stat-label">Marks</span><span class="stat-value" id="res-marks">—</span></div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="results-actions">
+            <button class="btn btn-primary" id="res-review-btn" onclick="handleReviewClick(this)">📖 Review Answers</button>
+            <button class="btn btn-secondary" id="res-retake-btn" onclick="handleRetakeClick(this)">🔄 Retake Exam</button>
+            <button class="btn btn-outline" onclick="app.navigateProtected('exam-setup-screen')">📚 Try Another</button>
+            <button class="btn btn-outline" onclick="app.navigateProtected('dashboard-screen')">🏠 Dashboard</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── EXAM REVIEW ────────────────────────────────── -->
+      <div id="exam-review-screen" class="protected-screen">
+        <div class="page-header">
+          <h2 id="review-title">Answer Review</h2>
+          <p id="review-date" class="page-subtitle"></p>
+        </div>
+        <div class="review-filters">
+          <button class="review-filter-btn active" data-filter="all">All</button>
+          <button class="review-filter-btn" data-filter="correct">✅ Correct</button>
+          <button class="review-filter-btn" data-filter="incorrect">❌ Incorrect</button>
+          <button class="review-filter-btn" data-filter="unanswered">⬜ Unanswered</button>
+          <button class="review-filter-btn" data-filter="marked">🟣 Marked</button>
+        </div>
+        <div id="review-questions-container" class="review-container"></div>
+        <div style="text-align:center; margin-top:24px;">
+          <button class="btn btn-secondary" onclick="app.navigateProtected('exam-results-screen')">← Back to Results</button>
+        </div>
+      </div>
+
+      <!-- ── ANALYTICS ──────────────────────────────────── -->
+      <div id="analytics-screen" class="protected-screen">
+        <div class="page-header">
+          <h2>📊 Analytics Dashboard</h2>
+          <p>Insights based on your real exam data.</p>
+        </div>
+
+        <!-- KPIs -->
+        <div class="stats-grid four-col">
+          <div class="stat-card"><span class="stat-icon">📝</span><span class="stat-label">Total Exams</span><span class="stat-value" id="kpi-total">—</span></div>
+          <div class="stat-card"><span class="stat-icon">📈</span><span class="stat-label">Avg Score</span><span class="stat-value" id="kpi-avg">—</span></div>
+          <div class="stat-card"><span class="stat-icon">🌟</span><span class="stat-label">Highest</span><span class="stat-value" id="kpi-highest">—</span></div>
+          <div class="stat-card"><span class="stat-icon">📉</span><span class="stat-label">Lowest</span><span class="stat-value" id="kpi-lowest">—</span></div>
+        </div>
+        <div class="stats-grid four-col" style="margin-top:12px">
+          <div class="stat-card"><span class="stat-icon">🎯</span><span class="stat-label">Accuracy</span><span class="stat-value" id="kpi-accuracy">—</span></div>
+          <div class="stat-card"><span class="stat-icon">❓</span><span class="stat-label">Questions</span><span class="stat-value" id="kpi-totalq">—</span></div>
+          <div class="stat-card"><span class="stat-icon">⏱️</span><span class="stat-label">Study Time</span><span class="stat-value" id="kpi-time">—</span></div>
+          <div class="stat-card"><span class="stat-icon">🔥</span><span class="stat-label">Streak</span><span class="stat-value" id="kpi-streak">—</span></div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-grid">
+          <div class="chart-card wide">
+            <h3 class="chart-title">Score Trend</h3>
+            <canvas id="score-trend-canvas" style="width:100%;height:220px"></canvas>
+          </div>
+          <div class="chart-card">
+            <h3 class="chart-title">Category Performance</h3>
+            <canvas id="category-chart-canvas" style="width:100%;height:220px"></canvas>
+          </div>
+          <div class="chart-card">
+            <h3 class="chart-title">Difficulty Breakdown</h3>
+            <canvas id="difficulty-chart-canvas" style="width:100%;height:200px"></canvas>
+          </div>
+          <div class="chart-card donut-card">
+            <h3 class="chart-title">Answer Accuracy</h3>
+            <canvas id="answer-donut-canvas" style="width:180px;height:180px;margin:0 auto;display:block"></canvas>
+            <div id="donut-legend" class="donut-legend"></div>
+          </div>
+        </div>
+
+        <!-- Insights -->
+        <div class="insights-section">
+          <h3 class="section-title">💡 Personalized Insights</h3>
+          <div id="insights-container" class="insights-container"></div>
+        </div>
+
+        <!-- Goals -->
+        <div class="goals-section">
+          <h3 class="section-title">🎯 Progress Goals</h3>
+          <div class="goals-grid">
+            <div class="goal-card">
+              <div class="goal-label">Daily Questions (<span id="goal-daily-text"></span>)</div>
+              <div class="goal-bar-container"><div class="goal-bar" id="goal-daily-bar"></div></div>
+              <div class="goal-meta" id="goal-daily-text2"></div>
+            </div>
+            <div class="goal-card">
+              <div class="goal-label">Weekly Exams (<span id="goal-weekly-text"></span>)</div>
+              <div class="goal-bar-container"><div class="goal-bar" id="goal-weekly-bar"></div></div>
+              <div class="goal-meta" id="goal-weekly-text2"></div>
+            </div>
+            <div class="goal-card">
+              <div class="goal-label">Target Score (<span id="goal-score-text"></span>)</div>
+              <div class="goal-bar-container"><div class="goal-bar" id="goal-score-bar"></div></div>
+              <div class="goal-meta" id="goal-score-text2"></div>
+            </div>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="showGoalEditor()">✏️ Edit Goals</button>
+        </div>
+      </div>
+
+      <!-- Goal Editor Modal -->
+      <div class="modal-overlay" id="goal-editor-modal">
+        <div class="modal-card">
+          <h3>Edit Goals</h3>
+          <div class="form-group"><label>Daily Questions Goal</label><input type="number" id="goal-daily-input" class="input-field" min="1" max="100" value="10" /></div>
+          <div class="form-group"><label>Weekly Exams Goal</label><input type="number" id="goal-weekly-input" class="input-field" min="1" max="30" value="3" /></div>
+          <div class="form-group"><label>Target Score (%)</label><input type="number" id="goal-score-input" class="input-field" min="1" max="100" value="80" /></div>
+          <div class="modal-actions">
+            <button class="btn btn-secondary" onclick="closeGoalEditor()">Cancel</button>
+            <button class="btn btn-primary" onclick="saveGoals()">Save Goals</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── QUICK QUIZ (existing) ───────────────────────── -->
+      <div id="setup-screen" class="protected-screen">
+        <div class="welcome-card">
+          <div class="app-icon">⚡</div>
+          <h2>Quick Quiz</h2>
+          <p class="app-subtitle">Jump straight into a quick practice session across all topics.</p>
+          <button id="start-btn" class="btn btn-primary">Start Quick Quiz</button>
+        </div>
+      </div>
+
+      <!-- QUICK QUIZ SCREEN -->
+      <div id="quiz-screen" class="protected-screen">
+        <div class="quiz-header">
+          <div class="timer-box" id="timer-box">
+            <span class="timer-icon">⏱️</span>
+            <span id="timer-display">10:00</span>
+          </div>
+          <div class="question-counter" id="question-counter">Question 1 / 10</div>
+        </div>
+        <div class="progress-container">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <p class="progress-label" id="progress-label">0% Complete</p>
+        <div class="quiz-card">
+          <div class="question-header">
+            <div class="question-number" id="question-number">Q1</div>
+            <button id="hint-btn" class="btn-hint">💡 Hint</button>
+          </div>
+          <h2 class="question-text" id="question-text">Loading...</h2>
+          <div class="options-grid" id="options-grid"></div>
+          <div class="hint-text" id="hint-text"></div>
+          <div class="feedback" id="feedback">
+            <div id="feedback-message"></div>
+            <div class="solution-text" id="solution-text"></div>
+          </div>
+        </div>
+        <div class="nav-buttons">
+          <button id="prev-btn" class="btn btn-secondary" disabled>&#8592; Previous</button>
+          <button id="next-btn" class="btn btn-primary" disabled>Next &#8594;</button>
+        </div>
+      </div>
+
+      <!-- QUICK QUIZ RESULTS -->
+      <div id="results-screen" class="protected-screen">
+        <div class="results-card">
+          <div class="trophy" id="trophy">🏆</div>
+          <h2 class="results-title">Quiz Complete!</h2>
+          <p class="results-subtitle" id="results-subtitle">Here's how you did:</p>
+          <div class="score-circle" id="score-circle">
+            <span class="score-points" id="score-points">0/10</span>
+            <span class="score-percent" id="score-percent">0%</span>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-card stat-correct"><span class="stat-icon">✅</span><span class="stat-label">Correct</span><span class="stat-value" id="correct-count">0</span></div>
+            <div class="stat-card stat-incorrect"><span class="stat-icon">❌</span><span class="stat-label">Incorrect</span><span class="stat-value" id="incorrect-count">0</span></div>
+            <div class="stat-card stat-hint"><span class="stat-icon">💡</span><span class="stat-label">Hints Used</span><span class="stat-value" id="hints-count">0</span></div>
+          </div>
+          <p class="grade-message" id="grade-message"></p>
+          <button id="restart-btn" class="btn btn-primary">Return to Dashboard</button>
+        </div>
+      </div>
+
+      <!-- ── EXAM HISTORY ────────────────────────────────── -->
+      <div id="exam-history-screen" class="protected-screen">
+        <div class="page-header">
+          <h2>📋 Exam History</h2>
+          <p>Review all your past exam attempts.</p>
+        </div>
+        <div class="history-toolbar">
+          <input type="text" id="history-search" class="input-field search-input" placeholder="🔍 Search by category..." oninput="refreshHistory()" />
+          <select id="history-cat-filter" class="input-field" onchange="refreshHistory()">
+            <option value="All">All Categories</option>
+            <option value="C">C</option>
+            <option value="Python">Python</option>
+            <option value="Java">Java</option>
+            <option value="HTML">HTML</option>
+            <option value="CSS">CSS</option>
+            <option value="JavaScript">JavaScript</option>
+            <option value="General">General</option>
+          </select>
+          <select id="history-diff-filter" class="input-field" onchange="refreshHistory()">
+            <option value="All">All Difficulties</option>
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
+          </select>
+          <select id="history-sort" class="input-field" onchange="refreshHistory()">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="highest">Highest Score</option>
+          </select>
+        </div>
+        <div id="history-list-container" class="history-list"></div>
+      </div>
+
+      <!-- ── ACHIEVEMENTS ────────────────────────────────── -->
+      <div id="achievements-screen" class="protected-screen">
+        <div class="page-header">
+          <h2>🏆 Achievements</h2>
+          <p>Complete exams to unlock badges and rewards.</p>
+        </div>
+        <div class="achievements-grid" id="achievements-grid"></div>
+      </div>
+
+      <!-- ── SETTINGS ────────────────────────────────────── -->
+      <div id="settings-screen" class="protected-screen">
+        <div class="page-header">
+          <h2>⚙️ Settings</h2>
+        </div>
+        <div class="settings-grid">
+          <div class="settings-card">
+            <h3>Profile</h3>
+            <div class="setting-group">
+              <label>Display Name</label>
+              <input type="text" id="settings-name" class="input-field" placeholder="Your name" />
+            </div>
+            <div class="setting-group">
+              <label>Username</label>
+              <input type="text" id="settings-username" class="input-field" disabled />
+            </div>
+            <div class="setting-group">
+              <label>Email</label>
+              <input type="email" id="settings-email" class="input-field" disabled />
+            </div>
+            <button class="btn btn-primary" onclick="saveProfileSettings()">Save Changes</button>
+          </div>
+          <div class="settings-card">
+            <h3>Appearance</h3>
+            <div class="setting-group">
+              <label>Theme</label>
+              <div class="theme-options">
+                <button class="btn btn-secondary" onclick="applyTheme(false)">☀️ Light</button>
+                <button class="btn btn-secondary" onclick="applyTheme(true)">🌙 Dark</button>
+              </div>
+            </div>
+          </div>
+          <div class="settings-card danger-zone">
+            <h3>Data</h3>
+            <p class="setting-note">⚠️ This app stores data in your browser's localStorage. Data is local to this browser only.</p>
+            <button class="btn btn-danger" onclick="if(confirm('Clear all exam history?')) { localStorage.removeItem('qs_attempts'); updateDashboardStats(); alert('History cleared.'); }">Clear Exam History</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div><!-- /protected-layout -->
+
+  <script src="data.js"></script>
+  <script src="auth.js"></script>
+  <script src="questions.js"></script>
+  <script src="exam.js"></script>
+  <script src="analytics.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
