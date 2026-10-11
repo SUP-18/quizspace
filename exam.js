@@ -356,9 +356,10 @@ const ExamEngine = (() => {
     const percentage = Math.round((marksObtained / maxMarks) * 100);
     const timeTaken = Math.round((Date.now() - new Date(state.startedAt).getTime()) / 1000);
 
+    const currentUserId = Auth.currentUser?.id || state.userId || 'guest';
     const attempt = {
       id: state.id,
-      userId: state.userId,
+      userId: currentUserId,
       config: state.config,
       questionResults,
       correct, incorrect, unanswered,
@@ -508,56 +509,102 @@ const ExamEngine = (() => {
 
   /* ─── History ────────────────────────────────────────── */
   function renderHistory(userId, filters = {}) {
-    app.navigateProtected('exam-history-screen');
-    let attempts = DB.getAttempts(userId).filter(a => a.status === 'completed');
-
-    // Apply filters
-    if (filters.category && filters.category !== 'All')
-      attempts = attempts.filter(a => a.config.category === filters.category);
-    if (filters.difficulty && filters.difficulty !== 'All')
-      attempts = attempts.filter(a => a.config.difficulty === filters.difficulty);
-    if (filters.search)
-      attempts = attempts.filter(a =>
-        a.config.category.toLowerCase().includes(filters.search.toLowerCase()));
-
-    // Sort
-    const sort = filters.sort || 'newest';
-    if (sort === 'newest') attempts.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
-    else if (sort === 'oldest') attempts.sort((a, b) => new Date(a.submittedAt) - new Date(b.submittedAt));
-    else if (sort === 'highest') attempts.sort((a, b) => b.percentage - a.percentage);
-
     const container = el('history-list-container');
     if (!container) return;
 
-    if (attempts.length === 0) {
-      container.innerHTML = `<div class="empty-state">
-        <div class="empty-icon">📋</div>
-        <h3>No exam history yet</h3>
-        <p>Complete an exam to see your history here.</p>
-        <button class="btn btn-primary" onclick="app.navigateProtected('exam-setup-screen')">Start an Exam</button>
-      </div>`;
+    const allUserAttempts = DB.getAttempts(userId).filter(a => a && a.status === 'completed');
+    let attempts = [...allUserAttempts];
+
+    // Apply category filter
+    if (filters.category && filters.category !== 'All') {
+      attempts = attempts.filter(a =>
+        a.config && a.config.category && a.config.category.toLowerCase() === filters.category.toLowerCase()
+      );
+    }
+
+    // Apply difficulty filter
+    if (filters.difficulty && filters.difficulty !== 'All') {
+      attempts = attempts.filter(a =>
+        a.config && a.config.difficulty && a.config.difficulty.toLowerCase() === filters.difficulty.toLowerCase()
+      );
+    }
+
+    // Apply search filter (category, difficulty, or exam title)
+    if (filters.search && filters.search.trim()) {
+      const q = filters.search.trim().toLowerCase();
+      attempts = attempts.filter(a => {
+        const cat = (a.config?.category || '').toLowerCase();
+        const diff = (a.config?.difficulty || '').toLowerCase();
+        const title = (a.config?.title || '').toLowerCase();
+        return cat.includes(q) || diff.includes(q) || title.includes(q);
+      });
+    }
+
+    // Apply sorting
+    const sort = filters.sort || 'newest';
+    if (sort === 'newest') {
+      attempts.sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime());
+    } else if (sort === 'oldest') {
+      attempts.sort((a, b) => new Date(a.submittedAt).getTime() - new Date(b.submittedAt).getTime());
+    } else if (sort === 'highest') {
+      attempts.sort((a, b) => (b.percentage || 0) - (a.percentage || 0));
+    } else if (sort === 'lowest') {
+      attempts.sort((a, b) => (a.percentage || 0) - (b.percentage || 0));
+    }
+
+    // Empty state 1: User has no completed exams at all
+    if (allUserAttempts.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">📋</div>
+          <h3>No exam history yet</h3>
+          <p>You haven't completed any exams yet. Start an exam to test your skills and track your progress!</p>
+          <button class="btn btn-primary" onclick="app.navigateProtected('exam-setup-screen')">Start an Exam</button>
+        </div>`;
       return;
     }
 
+    // Empty state 2: User has exams, but current search/filter combination returned 0 results
+    if (attempts.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">🔍</div>
+          <h3>No matching exams found</h3>
+          <p>No exam attempts match your current search and filter criteria. Try adjusting your filters.</p>
+          <button class="btn btn-secondary" onclick="resetHistoryFilters()">Reset Filters</button>
+        </div>`;
+      return;
+    }
+
+    // Render list of attempts
     container.innerHTML = attempts.map(a => {
       const d = new Date(a.submittedAt);
-      const mm = Math.floor(a.timeTaken / 60), ss = a.timeTaken % 60;
-      const pctClass = a.percentage >= 75 ? 'high' : a.percentage >= 50 ? 'mid' : 'low';
+      const timeTakenSec = a.timeTaken || 0;
+      const mm = Math.floor(timeTakenSec / 60);
+      const ss = timeTakenSec % 60;
+      const pct = typeof a.percentage === 'number' ? a.percentage : 0;
+      const pctClass = pct >= 75 ? 'high' : pct >= 50 ? 'mid' : 'low';
+      const category = a.config?.category || 'General';
+      const difficulty = a.config?.difficulty || 'Medium';
+      const numQuestions = a.config?.numQuestions || (a.questionResults ? a.questionResults.length : 0);
+      const correct = a.correct ?? 0;
+      const incorrect = a.incorrect ?? 0;
+
       return `
         <div class="history-card">
           <div class="history-card-left">
-            <span class="history-category">${a.config.category}</span>
-            <span class="exam-badge diff-${a.config.difficulty.toLowerCase()}">${a.config.difficulty}</span>
+            <span class="history-category">${category}</span>
+            <span class="exam-badge diff-${difficulty.toLowerCase()}">${difficulty}</span>
           </div>
           <div class="history-card-center">
             <div class="history-meta">${d.toLocaleDateString()} ${d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</div>
-            <div class="history-stats">${a.config.numQuestions} Qs · ${mm}m ${ss}s · ✅${a.correct} ❌${a.incorrect}</div>
+            <div class="history-stats">${numQuestions} Qs · ${mm}m ${ss}s · ✅${correct} ❌${incorrect}</div>
           </div>
           <div class="history-card-right">
-            <span class="history-score ${pctClass}">${a.percentage}%</span>
+            <span class="history-score ${pctClass}">${pct}%</span>
             <div class="history-actions">
               <button class="btn btn-sm btn-secondary" onclick="ExamEngine.viewResult('${a.id}')">View</button>
-              <button class="btn btn-sm btn-primary" onclick="ExamEngine.retakeExam(${JSON.stringify(a.config).replace(/"/g,'&quot;')})">Retake</button>
+              <button class="btn btn-sm btn-primary" onclick="ExamEngine.retakeExam('${a.id}')">Retake</button>
             </div>
           </div>
         </div>`;
@@ -569,15 +616,24 @@ const ExamEngine = (() => {
     if (attempt) renderResults(attempt);
   }
 
-  function retakeExam(config) {
+  function retakeExam(attemptIdOrConfig) {
+    let config = attemptIdOrConfig;
+    if (typeof attemptIdOrConfig === 'string') {
+      const att = DB.getAttempt(attemptIdOrConfig);
+      if (att && att.config) config = att.config;
+    }
+    if (!config) {
+      app.navigateProtected('exam-setup-screen');
+      return;
+    }
     app.navigateProtected('exam-setup-screen');
     // Pre-fill form
     const catSel = el('exam-setup-category');
     const diffSel = el('exam-setup-difficulty');
     const numSel = el('exam-setup-numq');
-    if (catSel) catSel.value = config.category;
-    if (diffSel) diffSel.value = config.difficulty;
-    if (numSel) numSel.value = config.numQuestions;
+    if (catSel && config.category) catSel.value = config.category;
+    if (diffSel && config.difficulty) diffSel.value = config.difficulty;
+    if (numSel && config.numQuestions) numSel.value = config.numQuestions;
     updateDurationPreview();
   }
 
@@ -622,6 +678,7 @@ const ExamEngine = (() => {
     confirmSubmit,
     renderReview,
     renderHistory,
+    showHistory: () => app.navigateProtected('exam-history-screen'),
     viewResult,
     retakeExam,
     updateDurationPreview,

@@ -285,6 +285,18 @@ function refreshHistory() {
   });
 }
 
+function resetHistoryFilters() {
+  const searchInput = document.getElementById('history-search');
+  const catFilter = document.getElementById('history-cat-filter');
+  const diffFilter = document.getElementById('history-diff-filter');
+  const sortFilter = document.getElementById('history-sort');
+  if (searchInput) searchInput.value = '';
+  if (catFilter) catFilter.value = 'All';
+  if (diffFilter) diffFilter.value = 'All';
+  if (sortFilter) sortFilter.value = 'newest';
+  refreshHistory();
+}
+
 /* ─── Achievements ───────────────────────────────────── */
 function renderAchievements() {
   const userId = Auth.currentUser?.id;

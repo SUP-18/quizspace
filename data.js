@@ -30,15 +30,34 @@ const DB = {
   /* ── Attempts ────────────────────────────────────── */
   getAttempts(userId) {
     const all = this._get(this.KEYS.ATTEMPTS);
-    return userId ? all.filter(a => a.userId === userId) : all;
+    if (!userId) return all;
+    if (userId === 'guest') {
+      return all.filter(a => !a.userId || a.userId === 'guest');
+    }
+    // For logged-in user: match their userId.
+    // Also claim any unassigned or guest attempts so previous progress is preserved.
+    let migrated = false;
+    all.forEach(a => {
+      if (!a.userId || a.userId === 'guest') {
+        a.userId = userId;
+        migrated = true;
+      }
+    });
+    if (migrated) {
+      this._set(this.KEYS.ATTEMPTS, all);
+    }
+    return all.filter(a => a.userId === userId);
   },
 
   saveAttempt(attempt) {
     if (!attempt || !attempt.id) return false;
     const all = this._get(this.KEYS.ATTEMPTS);
-    // Prevent duplicate saves
-    if (all.find(a => a.id === attempt.id)) return false;
-    all.push(attempt);
+    const existingIndex = all.findIndex(a => a.id === attempt.id);
+    if (existingIndex >= 0) {
+      all[existingIndex] = attempt;
+    } else {
+      all.push(attempt);
+    }
     return this._set(this.KEYS.ATTEMPTS, all);
   },
 

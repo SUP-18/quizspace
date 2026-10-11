@@ -625,16 +625,16 @@
           <p>Review all your past exam attempts.</p>
         </div>
         <div class="history-toolbar">
-          <input type="text" id="history-search" class="input-field search-input" placeholder="🔍 Search by category..." oninput="refreshHistory()" />
+          <input type="text" id="history-search" class="input-field search-input" placeholder="🔍 Search by category, difficulty, or topic..." oninput="refreshHistory()" />
           <select id="history-cat-filter" class="input-field" onchange="refreshHistory()">
             <option value="All">All Categories</option>
-            <option value="C">C</option>
+            <option value="C">C Language</option>
             <option value="Python">Python</option>
             <option value="Java">Java</option>
             <option value="HTML">HTML</option>
             <option value="CSS">CSS</option>
             <option value="JavaScript">JavaScript</option>
-            <option value="General">General</option>
+            <option value="General">General Programming</option>
           </select>
           <select id="history-diff-filter" class="input-field" onchange="refreshHistory()">
             <option value="All">All Difficulties</option>
@@ -646,6 +646,7 @@
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>
             <option value="highest">Highest Score</option>
+            <option value="lowest">Lowest Score</option>
           </select>
         </div>
         <div id="history-list-container" class="history-list"></div>
