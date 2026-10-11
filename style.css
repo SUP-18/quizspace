@@ -1039,3 +1039,11 @@ input[type="checkbox"] { display: none; }
   .history-toolbar { flex-direction: column; }
   .search-input { width: 100%; }
 }
+
+/* Make form checkboxes visible and usable */
+.form-options input[type="checkbox"] {
+  display: inline-block;
+  width: auto;
+  accent-color: var(--accent-primary);
+}
+
