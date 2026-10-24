@@ -86,5 +86,16 @@ const questions = [
   { id:"q_gen_07", question:"Which design pattern ensures a class has only one instance?", options:["Factory","Observer","Singleton","Decorator"], answer:2, topic:"General", difficulty:"Hard", hint:"There can be only one.", solution:"The Singleton pattern restricts instantiation to one object and provides a global access point to it." },
   { id:"q_gen_08", question:"What does DRY stand for in programming?", options:["Data Reduction Yesterday","Don't Repeat Yourself","Dynamic Runtime Yielding","Dual Resource Yielding"], answer:1, topic:"General", difficulty:"Easy", hint:"It's a core coding principle about repetition.", solution:"DRY = Don't Repeat Yourself. Avoid code duplication by abstracting reusable logic into functions or modules." },
   { id:"q_gen_09", question:"What is a version control system?", options:["A tool that speeds up compilation","Software that tracks changes to files over time","A type of database","A deployment server"], answer:1, topic:"General", difficulty:"Easy", hint:"Git is the most popular one.", solution:"Version control (like Git) records changes to files over time, enabling collaboration, history, and rollback." },
-  { id:"q_gen_10", question:"What is the time complexity of accessing an element in an array by index?", options:["O(n)","O(log n)","O(1)","O(n²)"], answer:2, topic:"General", difficulty:"Medium", hint:"Direct memory access — no searching needed.", solution:"Array index access is O(1) — constant time — because arrays store elements at contiguous memory addresses." }
+  { id:"q_gen_10", question:"What is the time complexity of accessing an element in an array by index?", options:["O(n)","O(log n)","O(1)","O(n²)"], answer:2, topic:"General", difficulty:"Medium", hint:"Direct memory access — no searching needed.", solution:"Array index access is O(1) — constant time — because arrays store elements at contiguous memory addresses." },
+   
+{
+  id: "q_gen_11",
+  question: "Which data structure follows the FIFO principle?",
+  options: ["Stack", "Queue", "Tree", "Graph"],
+  answer: 1,
+  topic: "General",
+  difficulty: "Easy",
+  hint: "FIFO means First In, First Out.",
+  solution: "A queue follows First In, First Out (FIFO). The first item added is the first item removed."
+}
 ];
