@@ -96,4 +96,5 @@ This project is open-source and available for educational purposes.
 ## 🤝 Contributions
 
 Suggestions, bug reports, and improvements are welcome! Feel free to explore the project and help make QuizSpace better.
+QuizSpace is an Online quiz application
 
