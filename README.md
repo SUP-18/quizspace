@@ -76,3 +76,24 @@ Because this is a static site, it can be hosted on any static file hosting servi
 ## 📝 License
 
 This project is open-source and available for educational purposes.
+
+## 🚀 How to Use QuizSpace
+
+1. Open the QuizSpace website in your browser.
+2. Choose your preferred quiz category and difficulty level.
+3. Select the number of questions and start the exam.
+4. Answer the questions within the given time limit.
+5. Review your results and read the explanations.
+6. Track your progress and work toward your daily learning goals.
+
+## 🎯 Future Improvements
+
+- Add more quiz categories and questions.
+- Improve accessibility and mobile responsiveness.
+- Introduce more practice modes for different learning levels.
+- Enhance performance analytics to help users identify weak areas.
+
+## 🤝 Contributions
+
+Suggestions, bug reports, and improvements are welcome! Feel free to explore the project and help make QuizSpace better.
+
